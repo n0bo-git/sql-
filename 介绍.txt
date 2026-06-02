@@ -1,3 +1,4 @@
+脚手架：
 aop：分页
 cogfing：解决跨域问题
 context：本地线程，里面的数据全局都可以调用
@@ -10,3 +11,7 @@ service：业务逻辑层，接收请求操作返回需要的
 utils：工具类
 CommonApplication：启动类
 applicaation:后端配置文件
+vue：
+widincss:Ui组件，让颜色，动画都变得更轻松简单
+element plus：UI组件，让添加元素更加方便简单
+vue route：管理页面切换的vue"导航员"，内容瞬间切换，页面不刷新
