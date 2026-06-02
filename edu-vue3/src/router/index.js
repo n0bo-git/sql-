@@ -4,6 +4,7 @@ import { createRouter, createWebHistory } from 'vue-router'
 import HomeIndex from '@/pages/HomeIndex.vue'
 import AboutView from '@/pages/AboutView.vue'
 import NotFound from '@/pages/NotFound.vue'
+import Userlogin from '@/pages/UserLogin.vue'
 
 
 
@@ -19,6 +20,11 @@ const router = createRouter({
       path: '/about',
       name: 'about',
       component: AboutView,
+    },
+    {
+      path: '/login',
+      name: 'login',
+      component: Userlogin,
     },
     {
       path: '/:pathMatch(.*)*',
