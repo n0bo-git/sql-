@@ -1,4 +1,4 @@
-//配置网页效果
+//配置网页
 <script setup>
 
 </script>
@@ -8,7 +8,7 @@
 </template>
 
 <style>
-  .btn{
+    .btn{
     @apply
    bg-indigo-500
    text-white
