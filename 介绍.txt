@@ -1,0 +1,12 @@
+aop：分页
+cogfing：解决跨域问题
+context：本地线程，里面的数据全局都可以调用
+controller：接收前端的请求，接口层
+exception：解决异常
+lnterceptor：拦截器，校验前端的请求
+mapper：持久层，定义好持久化接口，写对应xml文件或者通过注解和数据库联系来操作
+pojo：实体类
+service：业务逻辑层，接收请求操作返回需要的
+utils：工具类
+CommonApplication：启动类
+applicaation:后端配置文件
