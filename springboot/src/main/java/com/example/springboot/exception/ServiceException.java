@@ -1,11 +1,8 @@
 package com.example.springboot.exception;
 
-import lombok.Getter;
-
 /**
  * 自定义异常
  */
-@Getter
 public class ServiceException extends RuntimeException {
 
     private final String code;
@@ -19,5 +16,7 @@ public class ServiceException extends RuntimeException {
         super(msg);
         this.code = code;
     }
+
+    public String getCode() { return code; }
 
 }

@@ -1,15 +1,8 @@
 package com.example.springboot.common;
 
-import lombok.*;
-
 /**
  * 接口统一返回包装类
  */
-@Getter
-@Setter
-@AllArgsConstructor
-@NoArgsConstructor
-@Builder
 public class Result {
 
     public static final String CODE_SUCCESS = "200";
@@ -32,6 +25,36 @@ public class Result {
      */
     private Object data;
 
+    public Result() {}
+
+    public Result(String code, String msg, Object data) {
+        this.code = code;
+        this.msg = msg;
+        this.data = data;
+    }
+
+    public String getCode() { return code; }
+    public void setCode(String code) { this.code = code; }
+
+    public String getMsg() { return msg; }
+    public void setMsg(String msg) { this.msg = msg; }
+
+    public Object getData() { return data; }
+    public void setData(Object data) { this.data = data; }
+
+    // simple builder implementation
+    public static Builder builder() { return new Builder(); }
+
+    public static class Builder {
+        private String code;
+        private String msg;
+        private Object data;
+
+        public Builder code(String code) { this.code = code; return this; }
+        public Builder msg(String msg) { this.msg = msg; return this; }
+        public Builder data(Object data) { this.data = data; return this; }
+        public Result build() { return new Result(code, msg, data); }
+    }
 
     public static Result success() {
         return Result.builder().code(CODE_SUCCESS).msg("请求成功").build();
