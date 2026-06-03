@@ -5,6 +5,7 @@ import HomeIndex from '@/pages/HomeIndex.vue'
 import AboutView from '@/pages/AboutView.vue'
 import NotFound from '@/pages/NotFound.vue'
 import Userlogin from '@/pages/UserLogin.vue'
+import UserShopping from '@/pages/UserShopping.vue'
 
 
 
@@ -15,6 +16,11 @@ const router = createRouter({
       path: '/',
       name: 'home',
       component: HomeIndex,
+    },
+    {
+      path: '/shopping',
+      name: 'shopping',
+      component: UserShopping,
     },
     {
       path: '/about',
