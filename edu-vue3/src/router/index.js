@@ -6,6 +6,7 @@ import AboutView from '@/pages/AboutView.vue'
 import NotFound from '@/pages/NotFound.vue'
 import Userlogin from '@/pages/UserLogin.vue'
 import UserShopping from '@/pages/UserShopping.vue'
+import LoginTest from '@/pages/LoginTest.vue'
 
 
 
@@ -16,6 +17,11 @@ const router = createRouter({
       path: '/',
       name: 'home',
       component: HomeIndex,
+    },
+    {
+      path: '/logintest',
+      name: 'logintest',
+      component: LoginTest,
     },
     {
       path: '/shopping',
