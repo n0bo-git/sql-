@@ -1,7 +1,7 @@
 <template>
   <div class="layout">
     <el-container>
-      <AsideMenu class="asidemenu bg-green-500" />
+      <AsideMenu class="asidemenu"/>
       <el-container>
         <el-header>
           <HeadMenu class="headmenu bg-blue-500 " />
@@ -38,15 +38,15 @@
 .headmenu {
   position: fixed;
   width: 100%;
-  min-height: 20vh;
+  min-height: 10vh;
   margin-left: 10vw;
   margin-top: 0;
 }
 .content {
   position: fixed;
   width: 100%;
-  min-height: 80vh;
+  min-height: 90vh;
   margin-left: 10vw;
-  margin-top: 15vh;
+  margin-top: 5vh;
 }
 </style>

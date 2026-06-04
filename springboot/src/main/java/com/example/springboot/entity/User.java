@@ -1,5 +1,7 @@
 package com.example.springboot.entity;
 
+//ORM映射
+
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;

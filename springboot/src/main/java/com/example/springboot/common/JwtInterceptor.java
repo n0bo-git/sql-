@@ -23,6 +23,8 @@ import org.springframework.web.servlet.HandlerInterceptor;
  */
 public class JwtInterceptor implements HandlerInterceptor {
 
+
+
     @Autowired
     private UserMapper userMapper; // 用户数据访问接口，用于查询用户信息验证身份
 
