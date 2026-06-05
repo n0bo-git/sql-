@@ -3,13 +3,9 @@
     <el-container>
       <AsideMenu class="asidemenu"/>
       <el-container>
-        <el-header>
-          <HeadMenu class="headmenu bg-blue-500 " />
-        </el-header>
         <el-main>
-          <ActualContent class="content bg-yellow-200" />
+          <ActualContent class="content" />
         </el-main>
-
       </el-container>
     </el-container>
   </div>
@@ -18,7 +14,6 @@
 <script setup>
   import AsideMenu from './AsideMenu.vue'
   import ActualContent from './ActualContent.vue'
-  import  HeadMenu from './HeadMenu.vue';
 </script>
 
 <style scoped>
@@ -35,18 +30,11 @@
   top: 0;
   bottom: 0;
 }
-.headmenu {
-  position: fixed;
-  width: 100%;
-  min-height: 10vh;
-  margin-left: 10vw;
-  margin-top: 0;
-}
 .content {
   position: fixed;
-  width: 100%;
-  min-height: 90vh;
-  margin-left: 10vw;
-  margin-top: 5vh;
+  left: 10vw;
+  right: 0;
+  min-height: 100vh;
+  margin-top: 0;
 }
 </style>
