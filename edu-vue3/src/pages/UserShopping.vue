@@ -212,13 +212,12 @@ const $request = proxy.$request
 const router = useRouter()
 const userStore = useUserStore()
 
-/** 点击「个人中心」：已登录 → /home，未登录 → /login */
+/** 点击「个人中心」：→ 角色侧边栏第一项 */
 function goHome() {
-  if (userStore.token) {
-    router.push('/home')
-  } else {
-    router.push('/login')
-  }
+  if (!userStore.token) { router.push('/login'); return }
+  if (userStore.isAdmin)       router.push('/home/goods/list')   // 管理员→商品管理
+  else if (userStore.isMerchant) router.push('/home/goods/list')  // 商家→商品管理
+  else                          router.push('/home/cart')         // 用户→购物车
 }
 
 // ========== 查询参数 ==========
@@ -342,9 +341,13 @@ const cartLoading = ref(false)
 function openCartDialog(goods) { cartGoods.value = goods; cartQuantity.value = 1; cartVisible.value = true }
 
 async function confirmAddCart() {
+  if (!userStore.isLoggedIn || !userStore.userId) {
+    ElMessage.warning('请先重新登录再添加购物车')
+    return
+  }
   cartLoading.value = true
   try {
-    await $request.post('/goods/cart/add', { custCode: 'C001', goodsCode: cartGoods.value.goodsCode, quantity: cartQuantity.value, unitPrice: cartGoods.value.unitPrice })
+    await $request.post('/goods/cart/add', { userId: userStore.userId, goodsCode: cartGoods.value.goodsCode, quantity: cartQuantity.value, unitPrice: cartGoods.value.unitPrice })
     ElMessage.success(`已将「${cartGoods.value.goodsDesc}」×${cartQuantity.value} 加入购物车`)
     cartVisible.value = false
   } catch (e) { ElMessage.error('添加到购物车失败：' + (e.message || '网络错误')) }

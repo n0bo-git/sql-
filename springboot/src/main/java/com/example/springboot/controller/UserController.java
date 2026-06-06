@@ -87,14 +87,11 @@ public class UserController {
     @GetMapping("/selectByPage")
     public Result selectByPage(@RequestParam Integer pageNum,
                                @RequestParam Integer pageSize,
-                               @RequestParam String username,
-                               @RequestParam String role,
-                               @RequestParam String name) {
-        LambdaQueryWrapper<User> queryWrapper = new LambdaQueryWrapper<User>().orderByDesc(User::getId);  // 默认倒序，让最新的数据在最上面
+                               @RequestParam(required = false) String username,
+                               @RequestParam(required = false) Integer role) {
+        LambdaQueryWrapper<User> queryWrapper = new LambdaQueryWrapper<User>().orderByDesc(User::getId);
         queryWrapper.like(StrUtil.isNotBlank(username), User::getUsername, username);
-        queryWrapper.like(StrUtil.isNotBlank(name), User::getName, name);
-        queryWrapper.eq(StrUtil.isNotBlank(role), User::getRole, role);
-        // select * from user where username like '%#{username}%' and name like '%#{name}%'
+        queryWrapper.eq(role != null, User::getRole, role);
         Page<User> page = userService.page(new Page<>(pageNum, pageSize), queryWrapper);
         return Result.success(page);
     }

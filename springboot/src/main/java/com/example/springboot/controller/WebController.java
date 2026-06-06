@@ -47,8 +47,8 @@ public class WebController {
         if (user.getUsername().length() > 10 || user.getPassword().length() > 20) {
             return Result.error("数据输入不合法");
         }
-        if (StrUtil.isBlank(user.getRole())) {
-            user.setRole("USER");
+        if (user.getRole() == null) {
+            user.setRole(2);  // 默认普通用户
         }
         user = userService.register(user);
         return Result.success(user);
@@ -59,7 +59,7 @@ public class WebController {
      */
     @PutMapping("/password")
     public Result password(@RequestBody User user) {
-        if (StrUtil.isBlank(user.getUsername()) || StrUtil.isBlank(user.getPhone())) {
+        if (StrUtil.isBlank(user.getUsername()) || user.getRole() == null) {
             return Result.error("数据输入不合法");
         }
         userService.resetPassword(user);

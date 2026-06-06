@@ -4,7 +4,7 @@
       <AsideMenu class="asidemenu"/>
       <el-container>
         <el-main>
-          <ActualContent class="content" />
+          <router-view />
         </el-main>
       </el-container>
     </el-container>
@@ -13,7 +13,6 @@
 
 <script setup>
   import AsideMenu from './AsideMenu.vue'
-  import ActualContent from './ActualContent.vue'
 </script>
 
 <style scoped>
@@ -29,12 +28,14 @@
   left: 0;
   top: 0;
   bottom: 0;
+  z-index: 100;
 }
-.content {
+.el-main {
   position: fixed;
   left: 10vw;
   right: 0;
   min-height: 100vh;
   margin-top: 0;
+  padding: 0;
 }
 </style>

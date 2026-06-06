@@ -1,5 +1,6 @@
 package com.example.springboot.entity;
 
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 
@@ -9,7 +10,13 @@ public class Cart {
     @TableId("cart_code")
     private String cartCode;
 
+    /** 用户编号 → usermessage.user_id */
+    private Integer userId;
+
+    /** 旧顾客编码，保留兼容 */
+    @TableField(exist = false)
     private String custCode;
+
     private String goodsCode;
     private Integer quantity;
     private java.math.BigDecimal unitPrice;
@@ -19,6 +26,9 @@ public class Cart {
     // ---- getters / setters ----
     public String getCartCode() { return cartCode; }
     public void setCartCode(String cartCode) { this.cartCode = cartCode; }
+
+    public Integer getUserId() { return userId; }
+    public void setUserId(Integer userId) { this.userId = userId; }
 
     public String getCustCode() { return custCode; }
     public void setCustCode(String custCode) { this.custCode = custCode; }

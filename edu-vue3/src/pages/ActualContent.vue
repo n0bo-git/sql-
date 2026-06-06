@@ -49,8 +49,8 @@ import { useUserStore } from '@/stores/user'
 
 const userStore = useUserStore()
 
-function handleRecharge(method) {
-  userStore.recharge(1000)
+async function handleRecharge(method) {
+  await userStore.recharge(1000)
   ElMessage.success(`${method}充值成功！余额 +¥1000，当前余额：¥${userStore.balance}`)
 }
 </script>

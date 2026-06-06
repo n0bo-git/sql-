@@ -155,13 +155,6 @@
             >
               {{ loginLoading ? 'Signing in...' : 'Sign In' }}
             </el-button>
-
-            <p class="text-center text-gray-400 text-sm mt-8">
-              Don't have an account?
-              <span class="text-purple-600 cursor-pointer hover:underline font-medium" @click="switchTab('register')">
-                Register now
-              </span>
-            </p>
           </el-form>
 
           <!-- ========== 注册表单 ========== -->
@@ -229,12 +222,6 @@
               {{ registerLoading ? 'Creating account...' : 'Create Account' }}
             </el-button>
 
-            <p class="text-center text-gray-400 text-sm mt-8">
-              Already have an account?
-              <span class="text-purple-600 cursor-pointer hover:underline font-medium" @click="switchTab('login')">
-                Sign in
-              </span>
-            </p>
           </el-form>
         </transition>
       </div>
@@ -437,7 +424,7 @@ async function handleLogin() {
     })
     // 登录成功 — 保存 token 和邮箱到 store
     const user = res.data
-    userStore.login(loginForm.email, user.token)
+    userStore.login(loginForm.email, user.token, user.role, user.id)
     sessionStorage.removeItem(LOGIN_FAIL_KEY)
     loginFailCount.value = 0
     ElMessage.success('Login successful! Redirecting...')
