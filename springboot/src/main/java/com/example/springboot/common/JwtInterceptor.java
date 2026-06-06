@@ -7,13 +7,18 @@ import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.exceptions.JWTDecodeException;
 import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.example.springboot.entity.User;
-import com.example.springboot.exception.ServiceException;
 import com.example.springboot.mapper.UserMapper;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.HandlerInterceptor;
+
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.util.HashMap;
+import java.util.Map;
 
 
 /**
@@ -23,14 +28,14 @@ import org.springframework.web.servlet.HandlerInterceptor;
  */
 public class JwtInterceptor implements HandlerInterceptor {
 
-
+    private static final ObjectMapper objectMapper = new ObjectMapper();
 
     @Autowired
     private UserMapper userMapper; // 用户数据访问接口，用于查询用户信息验证身份
 
     /**
      * 请求处理前执行的拦截方法
-     * 验证请求中的JWT令牌，通过则放行，否则抛出认证异常
+     * 验证请求中的JWT令牌，通过则放行，否则直接返回 JSON 401 错误
      *
      * @param request  HTTP请求对象，用于获取请求头或参数中的token
      * @param response HTTP响应对象
@@ -46,51 +51,68 @@ public class JwtInterceptor implements HandlerInterceptor {
         }
 
         // 2. 处理无需认证的接口（标记了@AuthAccess注解的方法）
-        // 判断当前处理器是否为控制器方法
         if (handler instanceof HandlerMethod) {
-            // 获取方法上的@AuthAccess注解
             AuthAccess annotation = ((HandlerMethod) handler).getMethodAnnotation(AuthAccess.class);
             if (annotation != null) {
-                // 存在该注解，说明接口无需认证，直接放行
-                return true;
+                return true;  // 存在该注解，接口无需认证，直接放行
             }
         }
 
         // 3. 验证token是否存在
         if (StrUtil.isBlank(token)) {
-            // 无token时抛出未登录异常
-            throw new ServiceException("401", "token验证失败，请重新登录");
+            return writeAuthError(response, "token为空，请重新登录");
         }
 
         // 4. 解析token获取用户ID
         String userId;
         try {
-            // 从token的受众（audience）中获取第一个参数作为用户ID
-            // 注：此处依赖生成token时的格式，需与token生成逻辑保持一致
             userId = JWT.decode(token).getAudience().get(0);
         } catch (JWTDecodeException e) {
-            // token解析失败（格式错误），抛出未登录异常
-            throw new ServiceException("401", "token验证失败，请重新登录");
+            return writeAuthError(response, "token格式错误，请重新登录");
         }
 
         // 5. 根据用户ID查询数据库验证用户是否存在
-        User user = userMapper.selectById(Integer.valueOf(userId));
+        User user;
+        try {
+            user = userMapper.selectById(Integer.valueOf(userId));
+        } catch (NumberFormatException e) {
+            return writeAuthError(response, "token中用户ID无效，请重新登录");
+        }
         if (user == null) {
-            // 用户不存在，抛出未登录异常
-            throw new ServiceException("401", "用户不存在，请重新登录");
+            return writeAuthError(response, "用户不存在，请重新登录");
         }
 
         // 6. 验证token的有效性（使用用户密码作为密钥验证签名）
         try {
-            // 创建验证器：使用用户密码作为HMAC256算法的密钥（需与生成token时的密钥一致）
             JWTVerifier jwtVerifier = JWT.require(Algorithm.HMAC256(user.getPassword())).build();
-            jwtVerifier.verify(token); // 验证token的签名和有效期等
+            jwtVerifier.verify(token);
         } catch (JWTVerificationException e) {
-            // token验证失败（签名错误、已过期等），抛出未登录异常
-            throw new ServiceException("401", "token验证失败，请重新登录");
+            return writeAuthError(response, "token已过期或签名错误，请重新登录");
         }
 
-        // 7. 所有验证通过，放行请求
+        // 7. 所有验证通过，将用户ID存入request供后续使用
+        request.setAttribute("userId", userId);
         return true;
+    }
+
+    /**
+     * 向客户端写入 JSON 格式的 401 认证错误响应
+     * 不能在拦截器中抛异常（不会被 @ControllerAdvice 捕获），必须手动写响应
+     */
+    private boolean writeAuthError(HttpServletResponse response, String message) {
+        response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);  // HTTP 401
+        response.setContentType("application/json;charset=UTF-8");
+        try {
+            PrintWriter writer = response.getWriter();
+            Map<String, Object> result = new HashMap<>();
+            result.put("code", "401");
+            result.put("msg", message);
+            result.put("data", null);
+            writer.write(objectMapper.writeValueAsString(result));
+            writer.flush();
+        } catch (IOException ignored) {
+            // 响应已提交或 IO 异常，无法写入
+        }
+        return false;  // 不放行
     }
 }

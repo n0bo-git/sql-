@@ -39,8 +39,9 @@ public class GlobalException {
     public Result globalException(Exception e) {
         // 打印异常堆栈信息，便于开发和运维排查问题（生产环境可考虑输出到日志系统）
         e.printStackTrace();
-        // 返回默认的系统错误响应（错误码500，提示信息"系统错误"）
-        return Result.error("500", "系统错误");
+        // 返回系统错误响应，附带异常类名和消息便于调试
+        String detail = e.getMessage() != null ? e.getMessage() : e.getClass().getSimpleName();
+        return Result.error("500", "系统错误: " + detail);
     }
 
 }

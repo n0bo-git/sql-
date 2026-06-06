@@ -1,6 +1,5 @@
 package com.example.springboot.service.impl;
 
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.example.springboot.entity.Cart;
 import com.example.springboot.entity.Goods;
@@ -10,6 +9,8 @@ import com.example.springboot.mapper.CartMapper;
 import com.example.springboot.mapper.GoodsMapper;
 import com.example.springboot.mapper.GoodsReviewMapper;
 import com.example.springboot.service.IGoodsService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -20,6 +21,8 @@ import java.util.UUID;
 
 @Service
 public class GoodsServiceImpl implements IGoodsService {
+
+    private static final Logger log = LoggerFactory.getLogger(GoodsServiceImpl.class);
 
     @Autowired
     private GoodsMapper goodsMapper;
@@ -35,8 +38,8 @@ public class GoodsServiceImpl implements IGoodsService {
         Page<GoodsVO> page = new Page<>(pageNum, pageSize);
         Page<GoodsVO> result = goodsMapper.selectGoodsPage(page, keyword, categoryId);
 
-        // 为每个商品填充评论 + 平均分
         for (GoodsVO vo : result.getRecords()) {
+            fillCoverImage(vo);
             fillReviews(vo);
         }
         return result;
@@ -46,6 +49,7 @@ public class GoodsServiceImpl implements IGoodsService {
     public GoodsVO getGoodsDetail(String goodsCode) {
         GoodsVO vo = goodsMapper.selectGoodsDetail(goodsCode);
         if (vo != null) {
+            fillCoverImage(vo);
             fillReviews(vo);
         }
         return vo;
@@ -53,7 +57,7 @@ public class GoodsServiceImpl implements IGoodsService {
 
     @Override
     public List<Goods> listAll() {
-        return goodsMapper.selectList(new QueryWrapper<Goods>().orderByAsc("goods_code"));
+        return goodsMapper.selectAllGoods();
     }
 
     @Override
@@ -73,7 +77,7 @@ public class GoodsServiceImpl implements IGoodsService {
 
     @Override
     public void addToCart(Cart cart) {
-        String code = "CART" + LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMddHHmmss"))
+        String code = "CART" + LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyMMddHHmmss"))
                 + UUID.randomUUID().toString().substring(0, 4).toUpperCase();
         cart.setCartCode(code);
         cart.setAddTime(LocalDateTime.now());
@@ -85,16 +89,36 @@ public class GoodsServiceImpl implements IGoodsService {
     }
 
     // ========== 私有方法 ==========
+
+    /** 填充封面图：goods_image 表可能不存在，查不到不抛异常 */
+    private void fillCoverImage(GoodsVO vo) {
+        try {
+            String imageUrl = goodsMapper.selectCoverImage(vo.getGoodsCode());
+            vo.setCoverImage(imageUrl);  // null 也没关系，前端会用占位图
+        } catch (Exception e) {
+            // goods_image 表不存在或其他数据库错误 → 忽略，图片为空
+            log.warn("获取封面图失败 (goodsCode={}): {}", vo.getGoodsCode(), e.getMessage());
+            vo.setCoverImage(null);
+        }
+    }
+
+    /** 填充评论和评分：goods_review 表可能不存在，查不到不抛异常 */
     private void fillReviews(GoodsVO vo) {
-        List<GoodsReview> reviews = goodsReviewMapper.selectReviewsByGoodsCode(vo.getGoodsCode());
-        vo.setReviews(reviews);
-        if (reviews != null && !reviews.isEmpty()) {
-            double avg = reviews.stream()
-                    .mapToInt(GoodsReview::getReviewRating)
-                    .average()
-                    .orElse(0);
-            vo.setAvgRating(Math.round(avg * 10.0) / 10.0);
-        } else {
+        try {
+            List<GoodsReview> reviews = goodsReviewMapper.selectReviewsByGoodsCode(vo.getGoodsCode());
+            vo.setReviews(reviews);
+            if (reviews != null && !reviews.isEmpty()) {
+                double avg = reviews.stream()
+                        .mapToInt(GoodsReview::getReviewRating)
+                        .average()
+                        .orElse(0);
+                vo.setAvgRating(Math.round(avg * 10.0) / 10.0);
+            } else {
+                vo.setAvgRating(0.0);
+            }
+        } catch (Exception e) {
+            log.warn("获取评论失败 (goodsCode={}): {}", vo.getGoodsCode(), e.getMessage());
+            vo.setReviews(null);
             vo.setAvgRating(0.0);
         }
     }

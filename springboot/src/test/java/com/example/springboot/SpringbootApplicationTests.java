@@ -16,9 +16,7 @@ class SpringbootApplicationTests {
 
 	@Test
 	void contextLoads() {
-		List< HelloTest > all = helloMapper.selectAll();
-		System.out.println(all);
-		HelloTest helloTest = helloMapper.insertHello(1);
+
 
 
 	}

@@ -1,10 +1,11 @@
 package com.example.springboot.controller;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.example.springboot.common.Result;
-import com.example.springboot.entity.Cart;
-import com.example.springboot.entity.Goods;
-import com.example.springboot.entity.GoodsVO;
+import com.example.springboot.entity.*;
+import com.example.springboot.mapper.GoodsCategoryMapper;
+import com.example.springboot.mapper.ManufacturerMapper;
 import com.example.springboot.service.IGoodsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DuplicateKeyException;
@@ -19,6 +20,12 @@ public class GoodsController {
 
     @Autowired
     private IGoodsService goodsService;
+
+    @Autowired
+    private GoodsCategoryMapper goodsCategoryMapper;
+
+    @Autowired
+    private ManufacturerMapper manufacturerMapper;
 
     // ==================== 查询 ====================
 
@@ -98,5 +105,27 @@ public class GoodsController {
     public Result addToCart(@RequestBody Cart cart) {
         goodsService.addToCart(cart);
         return Result.success();
+    }
+
+    // ==================== 分类 & 厂家（供前端下拉） ====================
+
+    /**
+     * 查询全部分类（从 goods_category 表）
+     */
+    @GetMapping("/categories")
+    public Result getCategories() {
+        List<GoodsCategory> list = goodsCategoryMapper.selectList(
+            new QueryWrapper<GoodsCategory>().orderByAsc("sort_order"));
+        return Result.success(list);
+    }
+
+    /**
+     * 查询全部厂家（从 manufacturer 表）
+     */
+    @GetMapping("/manufacturers")
+    public Result getManufacturers() {
+        List<Manufacturer> list = manufacturerMapper.selectList(
+            new QueryWrapper<Manufacturer>().orderByAsc("manu_code"));
+        return Result.success(list);
     }
 }

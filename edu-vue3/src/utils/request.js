@@ -9,9 +9,17 @@ async function request(url, options = {}) {
   // 分离 params（fetch 不认识）
   const { params, ...fetchOptions } = options
 
+  // 自动从 localStorage 读取 token 并注入请求头
+  const token = localStorage.getItem('token')
+  const authHeaders = {}
+  if (token) {
+    authHeaders['token'] = token
+  }
+
   const config = {
     headers: {
       'Content-Type': 'application/json',
+      ...authHeaders,
       ...options.headers,
     },
     ...fetchOptions,
@@ -56,6 +64,15 @@ async function request(url, options = {}) {
   if (data.code === '200') {
     return data
   } else {
+    // 401 表示 token 失效，清除并跳转登录
+    if (data.code === '401') {
+      localStorage.removeItem('token')
+      localStorage.removeItem('userEmail')
+      // 非登录页才跳转，避免死循环
+      if (!window.location.href.includes('/login')) {
+        window.location.href = '/login'
+      }
+    }
     throw new Error(data.msg || '请求失败')
   }
 }

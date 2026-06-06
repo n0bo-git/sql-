@@ -110,7 +110,7 @@
             <el-form-item prop="email">
               <el-input
                 v-model="loginForm.email"
-                placeholder="Email address"
+                placeholder="Username or Email"
                 size="large"
                 :prefix-icon="Message"
                 clearable
@@ -176,7 +176,7 @@
             <el-form-item prop="email">
               <el-input
                 v-model="registerForm.email"
-                placeholder="Email address"
+                placeholder="Username or Email"
                 size="large"
                 :prefix-icon="Message"
                 clearable
@@ -287,11 +287,15 @@
 </template>
 
 <script setup>
-import { ref, reactive, computed, watch, nextTick } from 'vue'
+import { ref, reactive, computed, nextTick } from 'vue'
 import { useRouter } from 'vue-router'
 import { ElMessage } from 'element-plus'
 import { Message, Lock } from '@element-plus/icons-vue'
 import { useUserStore } from '@/stores/user'
+import { getCurrentInstance } from 'vue'
+
+const { proxy } = getCurrentInstance()
+const $request = proxy.$request
 
 const router = useRouter()
 const userStore = useUserStore()
@@ -324,12 +328,11 @@ const loginForm = reactive({
 
 const loginRules = {
   email: [
-    { required: true, message: 'Please enter your email', trigger: 'blur' },
-    { type: 'email', message: 'Invalid email format', trigger: 'blur' },
+    { required: true, message: 'Please enter your username or email', trigger: 'blur' },
   ],
   password: [
     { required: true, message: 'Please enter your password', trigger: 'blur' },
-    { min: 6, message: 'Password must be at least 6 characters', trigger: 'blur' },
+    { min: 3, message: 'Password must be at least 3 characters', trigger: 'blur' },
   ],
 }
 
@@ -352,12 +355,11 @@ const validateConfirmPassword = (_rule, value, callback) => {
 
 const registerRules = {
   email: [
-    { required: true, message: 'Please enter your email', trigger: 'blur' },
-    { type: 'email', message: 'Invalid email format', trigger: 'blur' },
+    { required: true, message: 'Please enter your username or email', trigger: 'blur' },
   ],
   password: [
     { required: true, message: 'Please enter your password', trigger: 'blur' },
-    { min: 6, message: 'Password must be at least 6 characters', trigger: 'blur' },
+    { min: 3, message: 'Password must be at least 3 characters', trigger: 'blur' },
     {
       pattern: /^(?=.*[A-Za-z])(?=.*\d)/,
       message: 'Password must contain at least one letter and one number',
@@ -418,12 +420,6 @@ function switchTab(tab) {
   activeTab.value = tab
 }
 
-// 模拟已注册用户（仅演示用）
-function simulateCheckUser(email) {
-  // 演示：admin@test.com 视为已注册用户
-  return email === 'admin@test.com'
-}
-
 async function handleLogin() {
   if (!loginFormRef.value) return
   try {
@@ -433,29 +429,30 @@ async function handleLogin() {
   }
 
   loginLoading.value = true
-  // 模拟 API 请求
-  await new Promise((r) => setTimeout(r, 1200))
-
-  // 模拟验证：仅 admin@test.com / 123456 可通过
-  if (loginForm.email === 'admin@test.com' && loginForm.password === '123456') {
-    // 登录成功 — 保存用户信息到 store
-    userStore.login(loginForm.email)
+  try {
+    // 调用后端 /login API（后端用 username 字段，前端用 email 字段传值）
+    const res = await $request.post('/login', {
+      username: loginForm.email,
+      password: loginForm.password,
+    })
+    // 登录成功 — 保存 token 和邮箱到 store
+    const user = res.data
+    userStore.login(loginForm.email, user.token)
     sessionStorage.removeItem(LOGIN_FAIL_KEY)
     loginFailCount.value = 0
     ElMessage.success('Login successful! Redirecting...')
-    loginLoading.value = false
     setTimeout(() => router.push('/home'), 800)
-  } else {
-    // 登录失败
+  } catch (e) {
     loginFailCount.value++
     sessionStorage.setItem(LOGIN_FAIL_KEY, String(loginFailCount.value))
-    loginLoading.value = false
     const remaining = Math.max(0, 3 - loginFailCount.value)
     if (remaining > 0) {
-      ElMessage.error(`Invalid credentials. ${remaining} attempt${remaining > 1 ? 's' : ''} remaining.`)
+      ElMessage.error(e.message || `Invalid credentials. ${remaining} attempt${remaining > 1 ? 's' : ''} remaining.`)
     } else {
       ElMessage.error('Too many failed attempts. You can now reset your password.')
     }
+  } finally {
+    loginLoading.value = false
   }
 }
 
@@ -468,30 +465,28 @@ async function handleRegister() {
   }
 
   registerLoading.value = true
-  await new Promise((r) => setTimeout(r, 1200))
-
-  // 模拟：检查邮箱是否已注册
-  if (simulateCheckUser(registerForm.email)) {
+  try {
+    // 调用后端 /register API
+    await $request.post('/register', {
+      username: registerForm.email,
+      password: registerForm.password,
+    })
     registerLoading.value = false
-    ElMessage.warning('This email is already registered. Please sign in.')
-    return
+    ElMessage.success('Registration successful! You can now sign in.')
+    registerForm.email = ''
+    registerForm.password = ''
+    registerForm.confirmPassword = ''
+    activeTab.value = 'login'
+  } catch (e) {
+    registerLoading.value = false
+    ElMessage.error(e.message || 'Registration failed')
   }
-
-  registerLoading.value = false
-  ElMessage.success('Registration successful! You can now sign in.')
-  // 清空表单
-  registerForm.email = ''
-  registerForm.password = ''
-  registerForm.confirmPassword = ''
-  // 切换到登录
-  activeTab.value = 'login'
 }
 
 function openResetDialog() {
   resetForm.email = ''
   resetSent.value = false
   resetDialogVisible.value = true
-  // 清除上次的验证状态
   nextTick(() => resetFormRef.value?.clearValidate())
 }
 
@@ -504,18 +499,24 @@ async function handleResetPassword() {
   }
 
   resetLoading.value = true
-  await new Promise((r) => setTimeout(r, 1500))
-
-  resetLoading.value = false
-  resetSent.value = true
-  ElMessage.success('Password reset link sent! Please check your email.')
-  // 清空失败计数
-  sessionStorage.removeItem(LOGIN_FAIL_KEY)
-  loginFailCount.value = 0
-
-  setTimeout(() => {
-    resetDialogVisible.value = false
-  }, 1500)
+  try {
+    // 调用后端 /password 重置密码 API
+    await $request.put('/password', {
+      username: resetForm.email,
+      phone: '', // 演示用，实际需用户填写验证手机号
+    })
+    resetLoading.value = false
+    resetSent.value = true
+    ElMessage.success('Password reset to default. Please check and change it.')
+    sessionStorage.removeItem(LOGIN_FAIL_KEY)
+    loginFailCount.value = 0
+    setTimeout(() => {
+      resetDialogVisible.value = false
+    }, 1500)
+  } catch (e) {
+    resetLoading.value = false
+    ElMessage.error(e.message || 'Password reset failed')
+  }
 }
 </script>
 

@@ -11,6 +11,7 @@ public class Goods {
     private String goodsCode;
 
     private String manuCode;
+    @TableField(exist = false)  // demo 库 goods 表无此列
     private String categoryId;
     private String goodsDesc;
     private java.math.BigDecimal unitPrice;
