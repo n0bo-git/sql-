@@ -11,7 +11,7 @@ sql-
 ├── edu-vue3/          # 前端 (Vue 3 + Element Plus + Pinia)
 ├── springboot/        # 后端 (Spring Boot 3 + MyBatis-Plus + JWT)
 ├── sql/               # 数据库脚本
-├── files/             # 上传文件存储
+├── files/             # 图片存储
 └── logs/              # 日志
 ```
 
