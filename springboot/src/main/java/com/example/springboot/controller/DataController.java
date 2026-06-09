@@ -151,6 +151,7 @@ public class DataController {
     public Result goodsDetail(@PathVariable String goodsCode) {
         GoodsVO vo = goodsMapper.selectGoodsDetail(goodsCode);
         if (vo == null) return Result.error("商品不存在");
+        try { vo.setCoverImage(goodsMapper.selectCoverImage(goodsCode)); } catch(Exception ignored) {}
         try {
             List<GoodsReview> reviews = goodsReviewMapper.selectReviewsByGoodsCode(goodsCode);
             vo.setReviews(reviews);

@@ -28,7 +28,7 @@
     <div class="avatar-area">
       <el-dropdown trigger="click" @command="handleCommand">
         <span class="avatar-trigger">
-          <el-avatar :size="36" :icon="UserFilled" />
+          <el-avatar :size="36" :src="avatar" :icon="UserFilled" />
           <span class="username">
             {{ userStore.email || '未登录' }}
             <span class="role-badge">{{ userStore.isAdmin ? '管理员' : '用户' }}</span>
@@ -69,7 +69,7 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { ref, onMounted, watch } from 'vue'
 import { useRouter } from 'vue-router'
 import { ElMessage } from 'element-plus'
 import { List, User, ShoppingCart, HomeFilled, UserFilled, ArrowDown, Wallet, SwitchButton, Money } from '@element-plus/icons-vue'
@@ -77,8 +77,23 @@ import { useUserStore } from '@/stores/user'
 
 const router = useRouter()
 const userStore = useUserStore()
+const avatar = ref('')
 const rechargeVisible = ref(false); const amount = ref(1000)
 const method = ref('微信'); const recharging = ref(false)
+
+async function loadAvatar() {
+  if (!userStore.userId) return
+  try {
+    const res = await fetch(`http://localhost:9999/usermessage/selectByUserId/${userStore.userId}`)
+    const data = await res.json()
+    if (data.code === '200' && data.data) {
+      avatar.value = data.data.avatar || ''
+      console.log('[Avatar] 加载:', avatar.value)
+    }
+  } catch(e) { console.error('[Avatar] 失败:', e) }
+}
+watch(() => userStore.userId, loadAvatar)
+onMounted(loadAvatar)
 
 function handleCommand(command) {
   if (command === 'balance') { userStore.toggleBalance() }

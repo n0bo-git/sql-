@@ -414,7 +414,7 @@ async function handleLogin() {
     sessionStorage.removeItem(LOGIN_FAIL_KEY)
     loginFailCount.value = 0
     ElMessage.success('登录成功！正在跳转...')
-    setTimeout(() => router.push('/home'), 800)
+    setTimeout(() => router.push('/'), 800)
   } catch (e) {
     loginFailCount.value++
     sessionStorage.setItem(LOGIN_FAIL_KEY, String(loginFailCount.value))
