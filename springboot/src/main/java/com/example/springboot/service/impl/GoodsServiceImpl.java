@@ -90,13 +90,11 @@ public class GoodsServiceImpl implements IGoodsService {
 
     // ========== 私有方法 ==========
 
-    /** 填充封面图：goods_image 表可能不存在，查不到不抛异常 */
     private void fillCoverImage(GoodsVO vo) {
         try {
             String imageUrl = goodsMapper.selectCoverImage(vo.getGoodsCode());
-            vo.setCoverImage(imageUrl);  // null 也没关系，前端会用占位图
+            vo.setCoverImage(imageUrl);
         } catch (Exception e) {
-            // goods_image 表不存在或其他数据库错误 → 忽略，图片为空
             log.warn("获取封面图失败 (goodsCode={}): {}", vo.getGoodsCode(), e.getMessage());
             vo.setCoverImage(null);
         }

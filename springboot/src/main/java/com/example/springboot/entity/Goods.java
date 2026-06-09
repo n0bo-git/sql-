@@ -1,6 +1,5 @@
 package com.example.springboot.entity;
 
-import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 
@@ -11,7 +10,6 @@ public class Goods {
     private String goodsCode;
 
     private String manuCode;
-    @TableField(exist = false)  // demo 库 goods 表无此列
     private String categoryId;
     private String goodsDesc;
     private java.math.BigDecimal unitPrice;

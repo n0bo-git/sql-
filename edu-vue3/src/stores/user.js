@@ -13,7 +13,6 @@ export const useUserStore = defineStore('user', () => {
 
   const isLoggedIn = computed(() => !!token.value)
   const isAdmin = computed(() => role.value === 0)
-  const isMerchant = computed(() => role.value === 1)
   const isUser = computed(() => role.value === 2)
 
   // 初始化时自动加载余额
@@ -74,5 +73,5 @@ export const useUserStore = defineStore('user', () => {
     } catch(e) { console.error('充值失败:', e) }
   }
 
-  return { userId, email, token, role, balance, showBalance, isLoggedIn, isAdmin, isMerchant, isUser, login, logout, toggleBalance, recharge, loadBalance }
+  return { userId, email, token, role, balance, showBalance, isLoggedIn, isAdmin, isUser, login, logout, toggleBalance, recharge, loadBalance }
 })

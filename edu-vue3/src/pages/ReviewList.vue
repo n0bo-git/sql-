@@ -4,7 +4,7 @@
     <el-table :data="list" border stripe v-loading="loading">
       <el-table-column prop="reviewCode" label="编号" width="100" />
       <el-table-column prop="goodsCode" label="商品" width="80" />
-      <el-table-column prop="custCode" label="用户" width="80" />
+      <el-table-column prop="custName" label="用户" width="100" />
       <el-table-column prop="review" label="评论内容" min-width="250" />
       <el-table-column prop="reviewRating" label="评分" width="80" />
       <el-table-column prop="reviewTime" label="时间" width="160" />

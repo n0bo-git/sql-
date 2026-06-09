@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.example.springboot.common.Result;
 import com.example.springboot.entity.*;
 import com.example.springboot.mapper.GoodsCategoryMapper;
+import com.example.springboot.mapper.GoodsImageMapper;
 import com.example.springboot.mapper.ManufacturerMapper;
 import com.example.springboot.service.IGoodsService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,6 +27,15 @@ public class GoodsController {
 
     @Autowired
     private ManufacturerMapper manufacturerMapper;
+    @Autowired
+    private GoodsImageMapper goodsImageMapper;
+
+    /** 新增商品分类 */
+    @PostMapping("/category/add")
+    public Result addCategory(@RequestBody GoodsCategory cat) {
+        goodsCategoryMapper.insert(cat);
+        return Result.success();
+    }
 
     // ==================== 查询 ====================
 
@@ -69,11 +79,15 @@ public class GoodsController {
         try {
             goodsService.addGoods(goods);
         } catch (Exception e) {
+            e.printStackTrace();
+            String msg = e.getMessage() != null ? e.getMessage() : e.getClass().getSimpleName();
             if (e instanceof DuplicateKeyException) {
-                return Result.error("商品编码已存在");
-            } else {
-                return Result.error("系统错误");
+                return Result.error("商品编码已存在: " + msg);
             }
+            // 找根因
+            Throwable cause = e.getCause();
+            while (cause != null && cause.getMessage() == null) cause = cause.getCause();
+            return Result.error("新增失败: " + (cause != null ? cause.getMessage() : msg));
         }
         return Result.success();
     }
@@ -128,4 +142,31 @@ public class GoodsController {
             new QueryWrapper<Manufacturer>().orderByAsc("manu_code"));
         return Result.success(list);
     }
+
+    /** 新增厂家 */
+    @PostMapping("/manufacturer/add")
+    public Result addManufacturer(@RequestBody Manufacturer mfr) {
+        manufacturerMapper.insert(mfr);
+        return Result.success();
+    }
+
+    /** 更新厂家信息 */
+    @PutMapping("/manufacturer/update")
+    public Result updateManufacturer(@RequestBody Manufacturer mfr) {
+        manufacturerMapper.updateById(mfr);
+        return Result.success();
+    }
+
+    /** 保存商品图片（自动清除旧封面） */
+    @PostMapping("/image/save")
+    public Result saveImage(@RequestBody GoodsImage img) {
+        if (img.getCreateTime() == null) img.setCreateTime(java.time.LocalDateTime.now());
+        // 将该商品旧封面的 is_cover 全部置 0
+        if (img.getIsCover() != null && img.getIsCover() == 1) {
+            goodsImageMapper.clearCover(img.getGoodsCode());
+        }
+        goodsImageMapper.insert(img);
+        return Result.success();
+    }
+
 }

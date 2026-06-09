@@ -57,7 +57,7 @@
     <!-- ===== 商品列表 ===== -->
     <div v-else class="goods-grid">
       <div v-for="goods in goodsList" :key="goods.goodsCode" class="goods-card">
-        <div class="card-image" @click="openDetail(goods)">
+        <div class="card-image" @click="goDetail(goods)">
           <img
             v-if="hasValidImage(goods)"
             :src="getImageUrl(goods.coverImage)"
@@ -215,16 +215,15 @@ const userStore = useUserStore()
 /** 点击「个人中心」：→ 角色侧边栏第一项 */
 function goHome() {
   if (!userStore.token) { router.push('/login'); return }
-  if (userStore.isAdmin)       router.push('/home/goods/list')   // 管理员→商品管理
-  else if (userStore.isMerchant) router.push('/home/goods/list')  // 商家→商品管理
-  else                          router.push('/home/cart')         // 用户→购物车
+  if (userStore.isAdmin) router.push('/home/goods/list')
+  else                    router.push('/home/cart')
 }
 
 // ========== 查询参数 ==========
 const keyword = ref('')
 const categoryId = ref('')
 const pageNum = ref(1)
-const pageSize = ref(12)
+const pageSize = ref(10)
 const total = ref(0)
 const loading = ref(false)
 const goodsList = ref([])
@@ -232,11 +231,9 @@ const goodsList = ref([])
 // ========== 响应式每页条数 ==========
 function calcPageSize() {
   const w = window.innerWidth
-  if (w >= 1600) pageSize.value = 16   // 4列 × 4行
-  else if (w >= 1200) pageSize.value = 12  // 4列 × 3行 或 3列 × 4行
-  else if (w >= 900) pageSize.value = 9    // 3列 × 3行
-  else if (w >= 600) pageSize.value = 6    // 2列 × 3行
-  else pageSize.value = 4                  // 1列 × 4行
+  if (w >= 1600) pageSize.value = 15
+  else if (w >= 900) pageSize.value = 10
+  else pageSize.value = 5
 }
 let resizeTimer = null
 function onResize() {
@@ -331,6 +328,7 @@ function handleSearch() {
 // ========== 详情弹窗 ==========
 const detailVisible = ref(false)
 const currentGoods = ref(null)
+function goDetail(goods) { router.push(`/product/${goods.goodsCode}`) }
 function openDetail(goods) { currentGoods.value = goods; detailVisible.value = true }
 
 // ========== 购物车弹窗 ==========

@@ -1,13 +1,9 @@
 <template>
   <div class="layout">
-    <el-container>
-      <AsideMenu class="asidemenu"/>
-      <el-container>
-        <el-main>
-          <router-view />
-        </el-main>
-      </el-container>
-    </el-container>
+    <AsideMenu class="asidemenu"/>
+    <div class="main-area">
+      <router-view />
+    </div>
   </div>
 </template>
 
@@ -15,27 +11,28 @@
   import AsideMenu from './AsideMenu.vue'
 </script>
 
+<style>
+/* 内容区所有页面撑满 */
+.main-area .page-wrap {
+  min-height: 100%;
+  box-sizing: border-box;
+}
+</style>
 <style scoped>
 .layout {
   display: flex;
-  flex-direction: row;
-  height: 100%;
+  min-height: 100vh;
 }
 .asidemenu {
-  width: 10vw;
-  height: 100%;
-  position: fixed;
-  left: 0;
-  top: 0;
-  bottom: 0;
-  z-index: 100;
+  width: 200px;
+  flex-shrink: 0;
+  background: #fff;
+  box-shadow: 1px 0 8px rgba(0,0,0,0.06);
 }
-.el-main {
-  position: fixed;
-  left: 10vw;
-  right: 0;
+.main-area {
+  flex: 1;
   min-height: 100vh;
-  margin-top: 0;
-  padding: 0;
+  background: #f5f7fa;
+  overflow-y: auto;
 }
 </style>

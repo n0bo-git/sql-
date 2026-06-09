@@ -15,21 +15,13 @@
             👋
           </div>
           <h1 class="text-white text-4xl font-bold mb-4 tracking-wide">
-            Welcome Back
+            欢迎
           </h1>
           <p class="text-purple-200 text-lg leading-relaxed">
-            Sign in to access your personal dashboard<br />and continue your learning journey.
+            登录<br />继续你的购物
           </p>
           <div class="mt-10 flex justify-center gap-4 text-white/70 text-sm">
-            <div class="flex items-center gap-2">
-              <span class="i-carbon-locked w-5 h-5" /> Secure
-            </div>
-            <div class="flex items-center gap-2">
-              <span class="i-carbon-flash w-5 h-5" /> Fast
-            </div>
-            <div class="flex items-center gap-2">
-              <span class="i-carbon-cloud w-5 h-5" /> Reliable
-            </div>
+
           </div>
         </div>
 
@@ -38,20 +30,14 @@
             🚀
           </div>
           <h1 class="text-white text-4xl font-bold mb-4 tracking-wide">
-            Join Us Today
+            今天就加入我们
           </h1>
           <p class="text-purple-200 text-lg leading-relaxed">
-            Create your account and start exploring<br />a world of knowledge.
+            创建你的账户，开始探索<br />一个知识的世界。
           </p>
           <div class="mt-10 flex justify-center gap-4 text-white/70 text-sm">
             <div class="flex items-center gap-2">
-              <span class="i-carbon-checkmark w-5 h-5" /> Free to Start
-            </div>
-            <div class="flex items-center gap-2">
-              <span class="i-carbon-user-multiple w-5 h-5" /> Community
-            </div>
-            <div class="flex items-center gap-2">
-              <span class="i-carbon-cube w-5 h-5" /> Resources
+              <span class="i-carbon-checkmark w-5 h-5" /> 免费开始
             </div>
           </div>
         </div>
@@ -131,7 +117,7 @@
 
             <div class="flex justify-between items-center mb-6 text-sm">
               <el-checkbox v-model="loginForm.remember" class="text-gray-500">
-                Remember me
+                记住我
               </el-checkbox>
 
               <!-- 失败3次后显示忘记密码 -->
@@ -141,7 +127,7 @@
                   class="text-purple-600 cursor-pointer hover:text-purple-800 font-medium transition-colors"
                   @click="openResetDialog"
                 >
-                  Forgot Password?
+                  忘记密码？
                 </a>
               </transition>
             </div>
@@ -243,7 +229,7 @@
         label-position="top"
       >
         <p class="text-gray-500 mb-6 text-sm leading-relaxed">
-          Enter your registered email address. We'll send you a link to reset your password.
+          输入您的注册邮箱，我们会发送一个确认链接到您的邮箱，点击链接后密码将重置为默认密码，请尽快登录并修改密码。
         </p>
         <el-form-item prop="email" label="Email Address">
           <el-input
@@ -315,11 +301,11 @@ const loginForm = reactive({
 
 const loginRules = {
   email: [
-    { required: true, message: 'Please enter your username or email', trigger: 'blur' },
+    { required: true, message: '请输入您的注册邮箱', trigger: 'blur' },
   ],
   password: [
-    { required: true, message: 'Please enter your password', trigger: 'blur' },
-    { min: 3, message: 'Password must be at least 3 characters', trigger: 'blur' },
+    { required: true, message: '请输入您的密码', trigger: 'blur' },
+    { min: 3, message: '密码必须至少包含3个字符', trigger: 'blur' },
   ],
 }
 
@@ -332,9 +318,9 @@ const registerForm = reactive({
 
 const validateConfirmPassword = (_rule, value, callback) => {
   if (!value) {
-    callback(new Error('Please confirm your password'))
+    callback(new Error('请确认您的密码'))
   } else if (value !== registerForm.password) {
-    callback(new Error('Passwords do not match'))
+    callback(new Error('密码错误，请重新输入'))
   } else {
     callback()
   }
@@ -342,19 +328,19 @@ const validateConfirmPassword = (_rule, value, callback) => {
 
 const registerRules = {
   email: [
-    { required: true, message: 'Please enter your username or email', trigger: 'blur' },
+    { required: true, message: '请输入您的注册邮箱', trigger: 'blur' },
   ],
   password: [
-    { required: true, message: 'Please enter your password', trigger: 'blur' },
-    { min: 3, message: 'Password must be at least 3 characters', trigger: 'blur' },
+    { required: true, message: '请输入您的密码', trigger: 'blur' },
+    { min: 3, message: '密码必须至少包含3个字符', trigger: 'blur' },
     {
       pattern: /^(?=.*[A-Za-z])(?=.*\d)/,
-      message: 'Password must contain at least one letter and one number',
+      message: '密码必须包含至少一个字母和一个数字',
       trigger: 'blur',
     },
   ],
   confirmPassword: [
-    { required: true, message: 'Please confirm your password', trigger: 'blur' },
+    { required: true, message: '请输入确认密码', trigger: 'blur' },
     { validator: validateConfirmPassword, trigger: 'blur' },
   ],
 }
@@ -397,8 +383,8 @@ const resetForm = reactive({
 
 const resetRules = {
   email: [
-    { required: true, message: 'Please enter your email', trigger: 'blur' },
-    { type: 'email', message: 'Invalid email format', trigger: 'blur' },
+    { required: true, message: '请输入您的注册邮箱', trigger: 'blur' },
+    { type: 'email', message: '邮箱格式不正确', trigger: 'blur' },
   ],
 }
 
@@ -427,7 +413,7 @@ async function handleLogin() {
     userStore.login(loginForm.email, user.token, user.role, user.id)
     sessionStorage.removeItem(LOGIN_FAIL_KEY)
     loginFailCount.value = 0
-    ElMessage.success('Login successful! Redirecting...')
+    ElMessage.success('登录成功！正在跳转...')
     setTimeout(() => router.push('/home'), 800)
   } catch (e) {
     loginFailCount.value++
@@ -436,7 +422,7 @@ async function handleLogin() {
     if (remaining > 0) {
       ElMessage.error(e.message || `Invalid credentials. ${remaining} attempt${remaining > 1 ? 's' : ''} remaining.`)
     } else {
-      ElMessage.error('Too many failed attempts. You can now reset your password.')
+      ElMessage.error('错误三次，请使用忘记密码功能重置密码。')
     }
   } finally {
     loginLoading.value = false
@@ -459,14 +445,14 @@ async function handleRegister() {
       password: registerForm.password,
     })
     registerLoading.value = false
-    ElMessage.success('Registration successful! You can now sign in.')
+    ElMessage.success('注册成功，现在可以登录了。')
     registerForm.email = ''
     registerForm.password = ''
     registerForm.confirmPassword = ''
     activeTab.value = 'login'
   } catch (e) {
     registerLoading.value = false
-    ElMessage.error(e.message || 'Registration failed')
+    ElMessage.error(e.message || '注册失败')
   }
 }
 
@@ -494,7 +480,7 @@ async function handleResetPassword() {
     })
     resetLoading.value = false
     resetSent.value = true
-    ElMessage.success('Password reset to default. Please check and change it.')
+    ElMessage.success('密码已重置为默认密码。请尽快登录并修改密码。')
     sessionStorage.removeItem(LOGIN_FAIL_KEY)
     loginFailCount.value = 0
     setTimeout(() => {
@@ -502,7 +488,7 @@ async function handleResetPassword() {
     }, 1500)
   } catch (e) {
     resetLoading.value = false
-    ElMessage.error(e.message || 'Password reset failed')
+    ElMessage.error(e.message || '重置密码失败')
   }
 }
 </script>

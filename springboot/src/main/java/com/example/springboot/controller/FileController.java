@@ -30,6 +30,7 @@ public class FileController {
     /**
      * 文件上传
      */
+    @AuthAccess
     @PostMapping("/upload")
     public Result upload(MultipartFile file) throws IOException {
         // 文件的原始名称 ps：aaa.png

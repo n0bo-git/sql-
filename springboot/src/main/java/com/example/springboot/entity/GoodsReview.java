@@ -10,35 +10,42 @@ public class GoodsReview {
     @TableId("review_code")
     private String reviewCode;
 
-    private String custCode;
+    private Integer userId;
     private String goodsCode;
     private String review;
     private Integer reviewRating;
     private java.time.LocalDateTime reviewTime;
 
-    /** 顾客名称（非表字段，用于关联查询展示） */
+    /** 用户名（JOIN 查询用，非表字段） */
     @TableField(exist = false)
     private String custName;
 
+    /** 旧 cust_code 字段，兼容 */
+    @TableField(exist = false)
+    private String custCode;
+
     // ---- getters / setters ----
     public String getReviewCode() { return reviewCode; }
-    public void setReviewCode(String reviewCode) { this.reviewCode = reviewCode; }
+    public void setReviewCode(String s) { this.reviewCode = s; }
 
-    public String getCustCode() { return custCode; }
-    public void setCustCode(String custCode) { this.custCode = custCode; }
+    public Integer getUserId() { return userId; }
+    public void setUserId(Integer u) { this.userId = u; }
 
     public String getGoodsCode() { return goodsCode; }
-    public void setGoodsCode(String goodsCode) { this.goodsCode = goodsCode; }
+    public void setGoodsCode(String s) { this.goodsCode = s; }
 
     public String getReview() { return review; }
-    public void setReview(String review) { this.review = review; }
+    public void setReview(String s) { this.review = s; }
 
     public Integer getReviewRating() { return reviewRating; }
-    public void setReviewRating(Integer reviewRating) { this.reviewRating = reviewRating; }
+    public void setReviewRating(Integer r) { this.reviewRating = r; }
 
     public java.time.LocalDateTime getReviewTime() { return reviewTime; }
-    public void setReviewTime(java.time.LocalDateTime reviewTime) { this.reviewTime = reviewTime; }
+    public void setReviewTime(java.time.LocalDateTime t) { this.reviewTime = t; }
 
     public String getCustName() { return custName; }
-    public void setCustName(String custName) { this.custName = custName; }
+    public void setCustName(String s) { this.custName = s; }
+
+    public String getCustCode() { return custCode; }
+    public void setCustCode(String s) { this.custCode = s; }
 }

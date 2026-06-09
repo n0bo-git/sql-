@@ -9,7 +9,7 @@ import java.util.List;
 
 public interface GoodsReviewMapper extends BaseMapper<GoodsReview> {
 
-    @Select("SELECT gr.review_code, gr.user_id AS cust_code, gr.goods_code, gr.review, " +
+    @Select("SELECT gr.review_code, gr.user_id, gr.goods_code, gr.review, " +
         "gr.review_rating, gr.review_time, " +
         "COALESCE(um.name, '匿名用户') AS cust_name " +
         "FROM goods_review gr " +
