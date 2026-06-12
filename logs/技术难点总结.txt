@@ -1,0 +1,202 @@
+电商平台开发 - 技术难点总结
+================================
+
+一、前后端交互
+--------------
+
+1. JWT 拦截器异常无法被全局捕获
+   拦截器 preHandle 中 throw ServiceException 不会被 @ControllerAdvice 捕获，
+   因为拦截器在 Controller 之前执行。
+   解决：手动写 JSON 到 HttpServletResponse，设 401 状态码。
+
+2. token 验证失败返回 500
+   前端 fetch 收到 HTML 错误页而非 JSON，response.json() 解析崩溃。
+   修复：拦截器直接返回 {"code":"401","msg":"..."}。
+
+3. request.js 网络错误无诊断
+   fetch 失败只抛 TypeError: Failed to fetch，无法区分后端未启动还是端口不对。
+   修复：try-catch 包裹 fetch，提示"无法连接后端服务"。
+
+4. Content-Type: application/json 误发给 GET
+   request.js 对所有请求统一加 Content-Type，规范上 GET 不应有此头。
+
+5. Mapper 查询 Page<VO> 与 @Results 冲突
+   @Results 固定映射与 MyBatis-Plus 分页 COUNT 查询冲突。
+   解决：去掉 @Results，依赖 mapUnderscoreToCamelCase 自动映射。
+
+6. 拦截器排除路径遗漏
+   /goods/**、/file/** 等路径未加入白名单，导致公开接口被拦截返回 401。
+
+
+二、数据库表结构变更
+--------------------
+
+1. composite PK 的 FK 约束
+   goods 表主键是 (goods_code, manu_code)，goods_image 的 FK 引用 goods_code 单列。
+   MySQL 8.0 允许引用复合主键的左前缀。
+
+2. 表结构不匹配导致大量 column 错误
+   goods 表实际与 SQL 文件定义不一致：category_id 缺失、goods_weight 缺失。
+   解决：@TableField(exist=false) 逐个适配缺失列。
+
+3. 顾客→用户表重构
+   customer→usermessage，user→userlogin。
+   所有外键从 varchar cust_code 改为 int user_id，涉及 6 张关联表（cart、
+   goods_review、order_main、payment、shipping_address、merchant_review）。
+
+4. cart_code 生成长度超限
+   生成逻辑 CART + 14位时间(yyyyMMddHHmmss) + 4位UUID = 22字符 > varchar(20)。
+   修复：时间格式改为 yyMMddHHmmss，节省 2 位，刚好 20 字符。
+
+5. 数据库名与应用配置不一致
+   shuju.sql 来自 bate 库，application.yml 连 shopping 库，后来改为 demo 库。
+
+6. demo.sql 多次重构
+   从 15 张表 → 精简为 8 张核心表。删除了 order_main、order_detail、payment、
+   supplier、inventory、merchant_review、shipping_address。
+
+
+三、MyBatis-Plus 映射
+---------------------
+
+1. eq("role", null) 生成 role IS NULL
+   前端不传 role → user.getRole()=null → MyBatis-Plus eq("role", null) 生成
+   IS NULL → admin 的 role='ADMIN' 查不到 → 登录失败。
+   修复：role != null 时才加 WHERE 条件。
+
+2. StrUtil.isBlank(Integer) 编译错误
+   role 从 String 改 Integer 后，WebController 中 StrUtil.isBlank(user.getRole()) 报错。
+   修复：改为 user.getRole() == null。
+
+3. User::getName 方法不存在
+   UserController.selectByPage 中 User::getName 方法已删除（name 迁移到 usermessage），
+   编译失败。修复：删除该行。
+
+4. 复合 PK 表 updateById 只匹配单列
+   goods 表有 (goods_code, manu_code) 复合 PK，@TableId("goods_code") 只标了第一列，
+   updateById/deleteById 按 goods_code 匹配。当前数据 goods_code 唯一，暂可用。
+
+5. 显式开启 mapUnderscoreToCamelCase
+   添加 mybatis-plus.configuration.map-underscore-to-camel-case=true 防止自动映射失效。
+   同时开启 log-impl: StdOutImpl 方便调试 SQL。
+
+
+四、前端数据类型转换
+--------------------
+
+1. Jackson 序列化 LocalDateTime 为数组
+   Java LocalDateTime → JSON 是 [2026,6,5,14,30,0] 而非字符串，
+   前端 .replace() 报 not a function。
+   解决：fmt() 同时处理字符串和数组两种格式。
+
+2. element-plus el-radio API 变更
+   label 属性废弃改用 value，不换则控制台告警 "label act as value is about to be deprecated"。
+
+3. el-dialog 被表格遮盖
+   弹窗在 AsideMenu 内部渲染，z-index 低于表格。
+   解决：append-to-body 将弹窗渲染到 <body> 层级。
+
+4. 商品图片类型判断
+   hasValidImage() 需三重检查：goods存在 → coverImage非空 → 未在 imgErrors 中记录失败。
+
+
+五、业务逻辑边界
+----------------
+
+1. 购物车 userId 与支付不匹配
+   管理员看全部购物车但支付时只算自己的 → 总价=0 → "无效的支付金额"。
+   修复：支付时过滤不属于当前用户的商品，给出明确中文提示。
+
+2. 购物车 FK 约束导致新增失败
+   cart.fk_cart_user 要求 user_id 在 usermessage 中存在 → userId=0 不存在。
+   修复：登录时保存 userId 到 localStorage，加购物车前校验 isLoggedIn。
+
+3. 新注册用户默认 role 值
+   save() 方法中 setRole("USER") 与 Integer 类型不兼容。
+   修复：setRole(2)。
+
+4. 支付后不生成订单记录
+   支付只扣余额+清购物车，未写 order_main 表。
+   修复：支付时生成订单号并 INSERT 订单记录。
+
+5. 商品编码自动生成
+   nextCode() 解析所有 Gxxx 格式编码取最大值+1，补充前导零。
+
+
+六、文件与图片
+--------------
+
+1. 图片上传后所有商品显示同一张图
+   openAdd() 未重置 form.imageUrl，旧 URL 被复用。
+   修复：每次新增时 form.imageUrl = ''。
+
+2. goods_image 表不存在
+   数据库未建表，fillCoverImage 的 try-catch 静默吞错。
+   解决：建表 SQL + 去掉静默异常。
+
+3. 上传封面不覆盖旧记录
+   每次上传新增 is_cover=1，旧记录不置 0 → 一商品多封面 → 旧图覆盖新图。
+   修复：clearCover() 先置 0 再插入新记录。
+
+4. @AuthAccess 遗漏
+   /file/upload 未加 @AuthAccess，上传请求被拦截器拦截。
+
+5. 图片显示需要 goodsMapper.selectCoverImage 单独查询
+   原来子查询放在主 SQL 中，goods_image 表缺失则整条查询崩溃。
+   改为 service 层单独调用，try-catch 保护。
+
+6. create_time NOT NULL 导致插入失败
+   GoodsImage 实体未设 createTime = null → MyBatis-Plus INSERT 带 NULL → 报错。
+   修复：插入前 if null 则 setCreateTime(LocalDateTime.now())。
+
+
+七、页面布局与路由
+------------------
+
+1. 内容区高度塌陷
+   position:fixed 导致 .main-area 脱离文档流，内容撑不满。
+   修复：改为 flex 布局 + min-height:100vh。
+
+2. 登录后跳转到侧边栏页面
+   登录成功 router.push('/home') → 带侧边栏布局，用户想要纯商品页。
+   修复：router.push('/') 跳转纯商品首页。
+
+3. 响应式布局自适应
+   grid-template-columns: repeat(4, 1fr) 固定列数，大屏浪费小屏拥挤。
+   修复：repeat(auto-fill, minmax(270px, 1fr)) + 动态 pageSize。
+
+4. 独立页与侧边栏页的路由分层
+   / 和 /product/:code 独立无侧边栏；/home/* 嵌套路由内嵌 HomeIndex 布局。
+
+5. html,body 未设 height:100%
+   子元素 height:100% 无法继承，布局塌陷。修复：App.vue 全局设 html,body{height:100%}。
+
+
+八、权限与安全
+--------------
+
+1. 三种身份→两种身份
+   原本 0=管理员 1=商家 2=用户，因商家逻辑复杂（涉及自动同步 manufacturer、
+   商品归属过滤等），简化为 0=管理员 2=用户。
+
+2. 角色修改需管理员身份
+   UserList 中角色下拉只有管理员可见，且不能修改自己的角色（disabled）。
+
+3. 拦截器排除路径统一管理
+   InterceptorConfig.excludePathPatterns 包含所有公开接口路径，
+   包括 /login、/register、/goods/**、/file/**、/usermessage/**、/cart/**、
+   /review/**。
+
+
+九、其他
+--------
+
+1. npm 安装 axios 权限失败
+   Windows 权限问题 npm install axios 报 EPERM。
+   替代：使用原生 fetch 封装 request.js，无第三方依赖。
+
+2. 日志文件管理
+   6.5日志记录所有修改；demo.sql Navicat 导出为唯一数据源。
+
+3. README.md 重写
+   旧版图文已不匹配当前项目结构和逻辑，按实际 8 表+路由+功能清单重写。
