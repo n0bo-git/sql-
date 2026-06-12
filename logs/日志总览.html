@@ -1,126 +1,0 @@
-<!DOCTYPE html>
-<html lang="zh-CN">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>日志总览</title>
-<style>
-  body {
-    font-family: "Microsoft YaHei", "微软雅黑", SimSun, "宋体", sans-serif;
-    max-width: 900px;
-    margin: 40px auto;
-    padding: 20px;
-    color: #333;
-    line-height: 1.8;
-  }
-  h1 { font-size: 24px; color: #1a1a1a; border-bottom: 2px solid #4472C4; padding-bottom: 8px; }
-  h2 { font-size: 20px; color: #2B579A; }
-  h3 { font-size: 17px; color: #333; }
-  h4 { font-size: 15px; color: #555; }
-  h5 { font-size: 14px; color: #666; }
-  table { border-collapse: collapse; width: 100%; margin: 12px 0; }
-  th { background-color: #4472C4; color: white; padding: 8px; text-align: center; }
-  td { padding: 8px; border: 1px solid #ccc; }
-  img { max-width: 100%; height: auto; margin: 8px 0; }
-  code { background-color: #f5f5f5; padding: 2px 6px; border-radius: 3px; font-family: Consolas, monospace; }
-  p { margin: 8px 0; }
-</style>
-</head>
-<body>
-<h1 style="margin:16px 0 8px 0; color:#1a1a1a; border-bottom:2px solid #333; padding-bottom:4px;">6.1</h1>
-<h3 style="margin:10px 0 6px 0; color:#333;">1.第一天拿到这个项目暂时难以下手，各种环境都尚未配置，于是我们决定先学习如何配置node，git等必要前置准备，在此基础上配置jdk 17+、mysql5.7/8.0、node 16.x+、maven环境</h3>
-<h5 style="margin:8px 0 4px 0;">(1).配置maven</h5>
-<p style="text-align:center; margin:12px 0;"><img src="https://cdn.nlark.com/yuque/0/2026/png/69251512/1781229624576-d182d4e2-81ab-4487-a46e-f6425e79dae7.png" width="1380" title="" crop="0,0,1,1" id="ue50774ee" class="ne-image"></p>
-<p style="margin:6px 0; line-height:1.6;">(2).配置jdk环境<img src="https://cdn.nlark.com/yuque/0/2026/png/69251512/1781229709371-313e3ad1-c1a7-4731-a36e-80c9d8c5fc1a.png" width="1350" title="" crop="0,0,1,1" id="ufca6d317" class="ne-image"><img src="https://cdn.nlark.com/yuque/0/2026/png/69251512/1781229744783-9af4d5bb-9292-4fcf-b353-bc2bbf5773f5.png" width="1542" title="" crop="0,0,1,1" id="u3d953e88" class="ne-image"><img src="https://cdn.nlark.com/yuque/0/2026/png/69251512/1781229753395-715995dc-ef5f-428c-88e0-ce7e76dd4f1d.png" width="1539" title="" crop="0,0,1,1" id="u029abce4" class="ne-image"></p>
-<h5 style="margin:8px 0 4px 0;">(3).导入sql脚本</h5>
-<p style="text-align:center; margin:12px 0;"><img src="https://cdn.nlark.com/yuque/0/2026/png/69251512/1781229941820-27ae4e02-faf8-4768-9883-bb8d0960ca87.png" width="642" title="" crop="0,0,1,1" id="udc1bb120" class="ne-image"><img src="https://cdn.nlark.com/yuque/0/2026/png/69251512/1781229993832-a498b3de-deb3-4fac-9f12-4bdbe7562a2b.png" width="2006" title="" crop="0,0,1,1" id="uefa19528" class="ne-image"></p>
-<h3 style="margin:10px 0 6px 0; color:#333;">2.在配置好必备组件以及环境我们终于可以开始我们的项目，但是打开项目的我们略显无措，于是乎我们又放慢脚步学习前后端分离的项目结构，了解前后端如何交互，后端如何操作数据库</h3>
-<h1 style="margin:16px 0 8px 0; color:#1a1a1a; border-bottom:2px solid #333; padding-bottom:4px;">6.2</h1>
-<h3 style="margin:10px 0 6px 0; color:#333;">1.在昨天一日的学习里我们对于这个项目有了基础的了解，我们经过研究决定先进行前端的开发，于是我们便先去学习了如何创建vue项目</h3>
-<h5 style="margin:8px 0 4px 0;">(1).学习了如何去配置路由</h5>
-<p style="text-align:center; margin:12px 0;"><img src="https://cdn.nlark.com/yuque/0/2026/png/69251512/1781230946364-fa678eff-2158-479a-87e7-1ae3ccc1889b.png?x-oss-process=image%2Fcrop%2Cx_0%2Cy_0%2Cw_1949%2Ch_1136" width="1949" title="" crop="0,0,0.7614,0.79" id="u8f31cde3" class="ne-image"></p>
-<h5 style="margin:8px 0 4px 0;">(2).使用element plus组件创建的404页面</h5>
-<p style="text-align:center; margin:12px 0;"><img src="https://cdn.nlark.com/yuque/0/2026/png/69251512/1781231047918-bb0e42a0-80f7-4b10-a7dd-cef59a3a86f1.png" width="2560" title="" crop="0,0,1,1" id="ue71e5163" class="ne-image"></p>
-<p style="margin:6px 0; line-height:1.6;">(代码展示)</p>
-<p style="text-align:center; margin:12px 0;"><img src="https://cdn.nlark.com/yuque/0/2026/png/69251512/1781231155918-9a020bee-b2d9-44b5-82cf-b909cf121043.png" width="2552" title="" crop="0,0,1,1" id="ub248c9ea" class="ne-image"></p>
-<p style="margin:6px 0; line-height:1.6;">(运行结果展示)</p>
-<h5 style="margin:8px 0 4px 0;">(3).学习widin css让我们的页面更加丰富</h5>
-<h1 style="margin:16px 0 8px 0; color:#1a1a1a; border-bottom:2px solid #333; padding-bottom:4px;">6.3</h1>
-<h3 style="margin:10px 0 6px 0; color:#333;">1.今天我们遇到了项目里的一个终极大难题--响应式布局</h3>
-<h5 style="margin:8px 0 4px 0;">(1).网页占不满格栅</h5>
-<h5 style="margin:8px 0 4px 0;">(2).文字被压缩成竖向排列的窄条</h5>
-<h5 style="margin:8px 0 4px 0;">解决方法</h5>
-<h5 style="margin:8px 0 4px 0;">修改配置文件默认格局</h5>
-<p style="text-align:center; margin:12px 0;"><img src="https://cdn.nlark.com/yuque/0/2026/png/69251512/1781232429372-bef853ae-07d0-4e3a-81c2-7ba0c7378d03.png" width="2560" title="" crop="0,0,1,1" id="u058a0d5b" class="ne-image"></p>
-<p style="text-align:center; margin:12px 0;"><img src="https://cdn.nlark.com/yuque/0/2026/png/69251512/1781232152188-1ed94241-b1e0-4216-8448-2f0607b96d91.png" width="2560" title="" crop="0,0,1,1" id="u010ec9bc" class="ne-image"></p>
-<p style="text-align:center; margin:12px 0;"><img src="https://cdn.nlark.com/yuque/0/2026/png/69251512/1781232167972-54b9db9c-edb7-4cd7-b606-4d08c0b8045b.png" width="2560" title="" crop="0,0,1,1" id="uad83b52c" class="ne-image"></p>
-<p style="text-align:center; margin:12px 0;"><img src="https://cdn.nlark.com/yuque/0/2026/png/69251512/1781232183333-eff5f567-6893-49dc-af34-9a4fea7bc9d2.png" width="2560" title="" crop="0,0,1,1" id="u3a8a9ab5" class="ne-image"></p>
-<h1 style="margin:16px 0 8px 0; color:#1a1a1a; border-bottom:2px solid #333; padding-bottom:4px;">6.4</h1>
-<h3 style="margin:10px 0 6px 0; color:#333;">1.学习springboot后端框架如何使用</h3>
-<h3 style="margin:10px 0 6px 0; color:#333;"><img src="https://cdn.nlark.com/yuque/0/2026/png/69251512/1781232964272-841172fd-d426-49b9-a691-082db9d2b01f.png" width="946" title="" crop="0,0,1,1" id="u2aadcbdb" class="ne-image"></h3>
-<p style="margin:6px 0; line-height:1.6;">2.学习了mybatis plus和数据库如何连接操作<img src="https://cdn.nlark.com/yuque/0/2026/png/69251512/1781232975212-cf6de051-0b92-48f2-b101-a198e06b4a19.png" width="1450" title="" crop="0,0,1,1" id="u63cbf837" class="ne-image">一般来说，后端就是分的controller、service、mapper三层</p>
-<p style="margin:6px 0; line-height:1.6;">controller（接口层）：负责前端请求的接收与响应。</p>
-<p style="margin:6px 0; line-height:1.6;">service（业务逻辑层）：负责业务逻辑处理，往往就是接收controller传递过来的参数、调用mapper持久化层完成各种不一样的逻辑处理，处理完成再转发回controller，controller再转发回前端。</p>
-<p style="margin:6px 0; line-height:1.6;">mapper（持久化层）：负责与数据库打交道。往往一个业务功能的本质就是对于不同数据的增删改查。</p>
-<h1 style="margin:16px 0 8px 0; color:#1a1a1a; border-bottom:2px solid #333; padding-bottom:4px;">6.5</h1>
-<h3 style="margin:10px 0 6px 0; color:#333;">1.时代的变迁！启航，大AI时代！</h3>
-<p style="margin:6px 0; line-height:1.6;">在今天我们接触到了claude code，宛如张三丰学会太极拳，神功大成，这对于我们无疑是锦上添花，如虎添翼，画龙点睛，接触下来有了全新的体验，付费有他付费的道理！</p>
-<p style="margin:6px 0; line-height:1.6;">现在流行vibe coding 氛围编程，我们紧跟时代潮流，先设计数据库结构，后端接口，前端框架，在拥有一定的编程能力的前提下用AI大幅提升效率，去其糟粕，取其精华。</p>
-<p style="text-align:center; margin:12px 0;"><img src="https://cdn.nlark.com/yuque/0/2026/png/69251512/1781233421330-b511c563-b461-4578-a684-1d62b117f995.png" width="2560" title="" crop="0,0,1,1" id="u195bfb7a" class="ne-image"></p>
-<p style="margin:6px 0; line-height:1.6;">这是我们的高级货后台的用量信息，也是非常的不错</p>
-<p style="text-align:center; margin:12px 0;"><img src="https://cdn.nlark.com/yuque/0/2026/png/69251512/1781233424635-a5496e67-e735-49c5-bd59-d5e454f48e3a.png" width="2560" title="" crop="0,0,1,1" id="u5fc09a9d" class="ne-image"></p>
-<h1 style="margin:16px 0 8px 0; color:#1a1a1a; border-bottom:2px solid #333; padding-bottom:4px;">6.8</h1>
-<h3 style="margin:10px 0 6px 0; color:#333;">1.在前一周的努力下，电商平台系统已经初具雏形，在此基础上我们今日优化了商城系统的逻辑，之前逻辑十分的杂乱，供应商，商家，商品，用户糅杂在一起，难以维护，优化后的系统仅保留商品，用户，管理员三个实体。</h3>
-<p style="text-align:center; margin:12px 0;"><img src="https://cdn.nlark.com/yuque/0/2026/png/69251512/1781242966581-0196936d-d3b2-4c0c-8c5d-c726cc7797d4.png" width="2560" title="" crop="0,0,1,1" id="u1a63fd6c" class="ne-image"></p>
-<h3 style="margin:10px 0 6px 0; color:#333;">2.此外我们优化了画面设置，重制了导航页格局，将导航页拆分为侧栏AsideMenu和主要内容区ActualContent，更加简洁引导性更强。</h3>
-<p style="text-align:center; margin:12px 0;"><img src="https://cdn.nlark.com/yuque/0/2026/png/69251512/1781244873306-be7c17bc-1be9-4462-926b-6c9f54602de0.png" width="2560" title="" crop="0,0,1,1" id="u5ac952fb" class="ne-image"></p>
-<h1 style="margin:16px 0 8px 0; color:#1a1a1a; border-bottom:2px solid #333; padding-bottom:4px;">6.11</h1>
-<h3 style="margin:10px 0 6px 0; color:#333;">1.学习分析MayBatis，MyBatis Plus的区别</h3>
-<p style="margin:6px 0; line-height:1.6;">| 维度 | MyBatis | MyBatis-Plus |</p>
-<table border="1" cellpadding="6" cellspacing="0" style="border-collapse:collapse; width:100%; margin:12px 0;">
-  <tr>
-    <th style="background-color:#f0f0f0; font-weight:bold; text-align:center;"><strong>定位</strong></th>
-    <th style="background-color:#f0f0f0; font-weight:bold; text-align:center;">轻量级 SQL 映射框架</th>
-    <th style="background-color:#f0f0f0; font-weight:bold; text-align:center;">MyBatis 增强工具包</th>
-  </tr>
-  <tr>
-    <td><strong>SQL 编写</strong></td>
-    <td>手写 XML/注解</td>
-    <td>自动生成 + 手动扩展</td>
-  </tr>
-  <tr>
-    <td><strong>单表 CRUD</strong></td>
-    <td>手写 Mapper + XML</td>
-    <td>继承 <code>BaseMapper</code> 自动生成</td>
-  </tr>
-  <tr>
-    <td><strong>条件查询</strong></td>
-    <td><code><if></code> 动态 SQL</td>
-    <td><code>QueryWrapper</code> 链式调用</td>
-  </tr>
-  <tr>
-    <td><strong>分页</strong></td>
-    <td>需集成 PageHelper</td>
-    <td>内置分页插件</td>
-  </tr>
-  <tr>
-    <td><strong>代码生成</strong></td>
-    <td>需 MBG 插件</td>
-    <td>一键生成 Entity/Mapper/Service/Controller</td>
-  </tr>
-  <tr>
-    <td><strong>乐观锁/逻辑删除</strong></td>
-    <td>手动实现</td>
-    <td>注解开箱即用</td>
-  </tr>
-</table>
-<h3 style="margin:10px 0 6px 0; color:#333;">2完成了项目开发，完结撒花</h3>
-<p style="text-align:center; margin:12px 0;"><img src="https://cdn.nlark.com/yuque/0/2026/png/69251512/1781246090829-3678e743-5524-4ba4-b197-9d2dc0cf77e2.png" width="2560" title="" crop="0,0,1,1" id="u8384fcc5" class="ne-image"></p>
-<p style="text-align:center; margin:12px 0;"><img src="https://cdn.nlark.com/yuque/0/2026/png/69251512/1781246096071-06435aa7-f4bb-4612-b28d-f050d1db2d4e.png" width="2560" title="" crop="0,0,1,1" id="u8af227a3" class="ne-image"></p>
-<p style="text-align:center; margin:12px 0;"><img src="https://cdn.nlark.com/yuque/0/2026/png/69251512/1781246182560-43ef8fd3-af15-4de9-a4ef-41609fb7487c.png" width="2560" title="" crop="0,0,1,1" id="u07a5b1dd" class="ne-image"><img src="https://cdn.nlark.com/yuque/0/2026/png/69251512/1781246578089-e12c7047-66e2-4a0b-995e-bb6f83c266e5.png" width="2560" title="" crop="0,0,1,1" id="u37440515" class="ne-image"></p>
-<h1 style="margin:16px 0 8px 0; color:#1a1a1a; border-bottom:2px solid #333; padding-bottom:4px;">6.12</h1>
-<p style="margin:6px 0; line-height:1.6;">本次项目我们充分发挥了团队协作的力量，学习了如何规范写代码，以便合作，维护我们的智慧结晶，同时我们也感受到了AI的强大，在我们的学习工作过程中的不可或缺，在这个过程里，我们曾遇到大大小小的各种疑难杂症，那一行行红色的error不停的在冲击我们的自信心，好在我们拥有一颗愈挫愈勇的心，我们迎难而上，不断地去解决各类bug，优化各种细节，一步一步的去维护升级我们的项目，十年磨一剑，终于在今日，我们的项目迎来了尾声，我们今日的学习成果离不开老师的指导，老师给予我们的经验都是十分的宝贵，我们珍惜教室里老师所传授的知识，理解，记忆融入到自己的见解里，同时我们所取得的成就也离不开同学之间的互相帮助，同学每踩到的一个坑都在为我们减少一个弯路，我们在饭后闲谈讨论着项目的问题，如何去优化维护。如果说老师和同学的帮助是我们项目成功路上的照明灯，那么AI一定是照明灯光照下被照亮的指示牌，我们在项目的进行中，合理的去使用AI，AI的力量无疑是强大的，如何正确的去与AI并行，这将是我们未来值得深思的问题，我们定要做到去其糟粕，取其精华。</p>
-<p style="margin:6px 0; line-height:1.6;">最后在这里由衷的感谢老师以及同学们的倾囊相授，悉心指导！！！</p>
-
-</body>
-</html>
