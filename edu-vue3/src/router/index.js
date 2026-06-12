@@ -10,6 +10,7 @@ import Profile from '@/pages/Profile.vue'
 import Cart from '@/pages/Cart.vue'
 import ProductDetail from '@/pages/ProductDetail.vue'
 import NotFound from '@/pages/NotFound.vue'
+import TestPage from '@/pages/TestPage.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -17,6 +18,7 @@ const router = createRouter({
     { path: '/',                   name: 'shopping',       component: UserShopping },
     { path: '/login',              name: 'login',          component: UserLogin },
     { path: '/product/:goodsCode', name: 'productDetail',  component: ProductDetail },
+    { path: '/test',               name: 'test',           component: TestPage },
     {
       path: '/home',
       component: HomeIndex,

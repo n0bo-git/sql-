@@ -70,7 +70,7 @@
               : 'text-gray-500 hover:text-gray-700'"
             @click="switchTab('login')"
           >
-            Sign In
+            登录
           </button>
           <button
             class="flex-1 py-3 rounded-lg text-sm font-semibold transition-all duration-300 z-10"
@@ -79,7 +79,7 @@
               : 'text-gray-500 hover:text-gray-700'"
             @click="switchTab('register')"
           >
-            Register
+            注册
           </button>
         </div>
 

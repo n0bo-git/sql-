@@ -11,7 +11,7 @@
  Target Server Version : 80046 (8.0.46)
  File Encoding         : 65001
 
- Date: 11/06/2026 08:38:42
+ Date: 12/06/2026 15:00:28
 */
 
 SET NAMES utf8mb4;
@@ -52,6 +52,7 @@ CREATE TABLE `goods`  (
   PRIMARY KEY (`goods_code`, `manu_code`) USING BTREE,
   INDEX `idx_manu`(`manu_code` ASC) USING BTREE,
   INDEX `idx_category`(`category_id` ASC) USING BTREE,
+  INDEX `goods_code`(`goods_code` ASC) USING BTREE,
   CONSTRAINT `fk_goods_category` FOREIGN KEY (`category_id`) REFERENCES `goods_category` (`category_id`) ON DELETE SET NULL ON UPDATE CASCADE,
   CONSTRAINT `fk_goods_manufacturer` FOREIGN KEY (`manu_code`) REFERENCES `manufacturer` (`manu_code`) ON DELETE RESTRICT ON UPDATE RESTRICT
 ) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = Dynamic;
@@ -123,8 +124,9 @@ INSERT INTO `goods_image` VALUES ('IMG1780984547531', 'G001', 'http://localhost:
 INSERT INTO `goods_image` VALUES ('IMG1780984573787', 'G001', 'http://localhost:9999/file/download/1780984572316_杰瑞.jpg', 0, 1, '2026-06-09 13:56:14');
 INSERT INTO `goods_image` VALUES ('IMG1780984588049', 'G001', 'http://localhost:9999/file/download/1780984587024_杰瑞.jpg', 0, 1, '2026-06-09 13:56:28');
 INSERT INTO `goods_image` VALUES ('IMG1780984626568', 'G001', 'http://localhost:9999/file/download/1780984624599_杰瑞.jpg', 0, 1, '2026-06-09 13:57:07');
-INSERT INTO `goods_image` VALUES ('IMG1780985523250', 'G001', 'http://localhost:9999/file/download/1780985522556_杰瑞.jpg', 1, 1, '2026-06-09 14:12:03');
+INSERT INTO `goods_image` VALUES ('IMG1780985523250', 'G001', 'http://localhost:9999/file/download/1780985522556_杰瑞.jpg', 0, 1, '2026-06-09 14:12:03');
 INSERT INTO `goods_image` VALUES ('IMG1780987247534', 'G013', 'http://localhost:9999/file/download/lxn.jpg', 1, 1, '2026-06-09 14:40:48');
+INSERT INTO `goods_image` VALUES ('IMG1781244901489', 'G001', 'http://localhost:9999/file/download/1781244900653_杰瑞.jpg', 1, 1, '2026-06-12 14:15:01');
 
 -- ----------------------------
 -- Table structure for goods_review

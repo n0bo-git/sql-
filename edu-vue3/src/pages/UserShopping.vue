@@ -352,7 +352,12 @@ async function confirmAddCart() {
   finally { cartLoading.value = false }
 }
 
-function formatTime(timeStr) { if (!timeStr) return ''; return timeStr.replace('T', ' ').substring(0, 16) }
+function formatTime(t) {
+  if (!t) return ''
+  if (typeof t === 'string') return t.replace('T',' ').substring(0,16)
+  if (Array.isArray(t) && t.length >= 5) return `${t[0]}-${String(t[1]).padStart(2,'0')}-${String(t[2]).padStart(2,'0')} ${String(t[3]).padStart(2,'0')}:${String(t[4]).padStart(2,'0')}`
+  return String(t).substring(0,16)
+}
 
 // ========== 初始化 ==========
 onMounted(() => {

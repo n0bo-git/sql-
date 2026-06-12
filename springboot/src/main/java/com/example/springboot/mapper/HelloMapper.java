@@ -18,5 +18,4 @@ public interface HelloMapper extends BaseMapper<Type> {
 
     @Delete("delete from hellotest where id = #{id}")
     void deleteById(Long id);
-
 }

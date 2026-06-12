@@ -4,6 +4,8 @@ import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
+import lombok.Data;
+
 
 /** 用户登录表 */
 @TableName("userlogin")
@@ -14,7 +16,7 @@ public class User {
     private String username;
     private String password;
 
-    /** 0=管理员 1=商家 2=普通用户 */
+    /** 0=管理员 2=普通用户 */
     private Integer role;
 
     @TableField(exist = false)
